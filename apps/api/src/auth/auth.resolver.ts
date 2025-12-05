@@ -4,12 +4,12 @@ import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { CustomContext } from './type';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Resolver()
 export class AuthResolver {
   constructor(
     private authService: AuthService,
-    private userService: UserService,
   ) {}
 
   // ***** Mutations *****
@@ -44,7 +44,9 @@ export class AuthResolver {
   }
 
   @Query(() => [String])
-  permissions(): Permissions[] {
+  permissions(@Context() context: CustomContext): Permissions[] {
+    const user = this.authService.getUserFromSession(context.req)
+    if (!user) throw new UnauthorizedException("User not authenticated");
     return Object.values(Permissions);
   }
 
