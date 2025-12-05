@@ -6,6 +6,9 @@
   "author": "",
   "license": "UNLICENSED",
   "scripts": {
+    "docker:up": "docker compose -f ./apps/api/docker-compose.yml up -d",
+    "docker:build-up": "docker compose -f ./apps/api/docker-compose.yml up -d --build",
+    "docker:down": "docker compose -f ./apps/api/docker-compose.yml down",
     "dev": "turbo run dev",
     "build": "turbo run build",
     "test": "turbo run test",
