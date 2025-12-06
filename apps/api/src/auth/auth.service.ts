@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import { UserService } from 'src/user/user.service';
-import { CustomRequest } from './type';
 import { Permissions } from 'src/user/entities/permissions.enum';
 
 @Injectable()
@@ -20,24 +19,5 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
 
     return user;
-  }
-
-  async getUserFromSession(req: CustomRequest): Promise<User> {
-    const sessionId = req.cookies?.sessionId;
-    if (!sessionId)
-      throw new UnauthorizedException('Not authenticated. Please login first.');
-
-    const user = await this.userService.findUserById(sessionId);
-    if (!user) throw new UnauthorizedException('User not found');
-
-    return user;
-  }
-
-  async hasPermission(
-    req: CustomRequest,
-    permission: Permissions,
-  ): Promise<string> {
-    const user = await this.getUserFromSession(req);
-    return user.permissions.includes(permission) ? 'OK' : 'NOT ALLOWED';
   }
 }
